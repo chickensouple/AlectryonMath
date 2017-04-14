@@ -8,6 +8,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <type_traits>
+#include "alectryonmath/Angle.h"
 
 /**
  * Quaternions are represented as length 4 column vectors
@@ -57,7 +58,7 @@ namespace Transformation {
         static_assert(std::is_floating_point<T>::value, "Type must be floating point");
 
         T theta = aa3.norm();
-        if (theta == 0) {
+        if (Angle::angle_dist(theta, 0) < AlectryonMath::eps) {
             return Eigen::Matrix<T, 4, 1>(1, 0, 0, 0);
         }
 
@@ -73,7 +74,7 @@ namespace Transformation {
         static_assert(std::is_floating_point<T>::value, "Type must be floating point");
 
         T theta = aa3.norm();
-        if (theta == 0) {
+        if (Angle::angle_dist(theta, 0) < AlectryonMath::eps) {
             return Eigen::Matrix<T, 4, 1>(0, 0, 0, 0);
         }
         Eigen::Matrix<T, 4, 1> aa4;
@@ -103,6 +104,7 @@ namespace Transformation {
     Eigen::Matrix<T, 3, 1> quat_to_aa3(const Eigen::Matrix<T, 4, 1>& quat) {
         static_assert(std::is_floating_point<T>::value, "Type must be floating point");
 
+        
 
     };
 }

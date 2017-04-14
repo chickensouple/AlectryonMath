@@ -9,20 +9,18 @@ find_package (Threads)
 find_package(GTest REQUIRED)
 set(GTEST_INCLUDE_DIRS ~/Documents/googletest/googletest/include/)
 find_package(Eigen3 REQUIRED)
+
+add_subdirectory(libalectryonmath)
+
+
 include_directories(
-        libtransformation/include
+        libalectryonmath/include
         ${EIGEN3_INCLUDE_DIR}
         ${GTEST_INCLUDE_DIRS})
 
-add_subdirectory(libangle)
-add_subdirectory(libtransformation)
-
-include_directories(libtransformation/include libangle/include)
-
-add_executable(TransformationUnitTests tests/TransformationUnitTests.cpp)
-target_link_libraries(TransformationUnitTests transformation ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-
+add_executable(TransformUnitTests tests/TransformUnitTests.cpp)
+target_link_libraries(TransformUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(AngleUnitTests tests/AngleUnitTests.cpp)
-target_link_libraries(AngleUnitTests angle ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(AngleUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 

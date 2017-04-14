@@ -2,7 +2,7 @@
 // This file instantiates templated functions for "float" and "double" types
 // Created by clark on 4/14/17.
 //
-#include "RotationConversions.h"
+#include "alectryonmath/RotationConversions.h"
 
 namespace Transformation {
     Eigen::Matrix<float, 4, 1> aa3_to_quat(const Eigen::Matrix<float, 3, 1>& aa3);

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cmath>
 #include "gtest/gtest.h"
-#include "Angle.h"
+#include "alectryonmath/Angle.h"
 
 
 #define CHECK_FLOATING_POINT(T, val1, val2) \
@@ -53,7 +53,7 @@ void TestConstrainAngle() {
     // test when angle is way under two pi
     CHECK_FLOATING_POINT(T, (T)0.1, Angle::constrain_angle_pi(angle7));
 
-
+    // test when function should throw error
     try {
         Angle::constrain_angle<T>(angle1, -1.0, 6.0);
         FAIL();

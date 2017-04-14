@@ -9,9 +9,8 @@
 #include <cmath>
 #include <exception>
 #include <stdexcept>
+#include "AlectryonMath.h"
 
-// TODO: instead of using eps, use relative floating point error (http://floating-point-gui.de/errors/comparison/)
-#define eps 1e-6
 
 // Function Definitions
 namespace Angle {
@@ -58,7 +57,7 @@ namespace Angle {
 
     template <class T>
     T constrain_angle(T angle, T min, T max) {
-        if ((min > max) or (std::fabs(max - min - TwoPi<T>()) > eps)) {
+        if ((min > max) or (std::fabs(max - min - TwoPi<T>()) > AlectryonMath::eps)) {
             throw std::invalid_argument("max must be 2*pi bigger than min");
         }
 
