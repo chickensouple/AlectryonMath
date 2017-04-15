@@ -21,6 +21,6 @@ include_directories(
 add_executable(TransformUnitTests tests/TransformUnitTests.cpp)
 target_link_libraries(TransformUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(AngleUnitTests tests/AngleUnitTests.cpp)
+add_executable(AngleUnitTests tests/AngleUnitTests.cpp tests/TestHelpers.h)
 target_link_libraries(AngleUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
