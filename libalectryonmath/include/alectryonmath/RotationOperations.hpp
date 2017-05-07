@@ -18,6 +18,8 @@ Eigen::Matrix3<T> rotx(T angle);
 template <class T>
 Eigen::Matrix3<T> roty(T angle);
 
+template <class T>
+Eigen::Matrix3<T> rotz(T angle);
 
 }
 }
@@ -54,6 +56,21 @@ Eigen::Matrix3<T> roty(T angle) {
 	roty(2, 0) = -sin_ang;
 	return roty;
 }
+
+template <class T>
+Eigen::Matrix3<T> rotz(T angle) {
+	Eigen::Matrix3<T> rotz = Eigen::Matrix3<T>::Zero();
+	rotz(2, 2) = 1;
+
+	T cos_ang = std::cos(angle);
+	T sin_ang = std::sin(angle);
+	rotz(0, 0) = cos_ang;
+	rotz(1, 1) = cos_ang;
+	rotz(0, 1) = -sin_ang;
+	rotz(1, 0) = sin_ang;
+	return rotz;
+}
+
 
 }
 }

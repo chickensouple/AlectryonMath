@@ -11,7 +11,6 @@
 #include <stdexcept>
 #include <alectryonmath/AlectryonMath.hpp>
 
-
 // Function Definitions
 namespace Alectryon {
 namespace Angle {
@@ -37,7 +36,6 @@ template<class T>
 T angle_dist(T angle1, T angle2);
 }
 }
-
 
 // Implementation
 namespace Alectryon {
