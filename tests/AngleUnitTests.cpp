@@ -31,10 +31,6 @@ void TestConstrainAngle() {
 	CHECK_FLOATING_POINT(T, angle1, Angle::constrain_angle_pi<T>(angle1));
 	CHECK_FLOATING_POINT(T, angle1, Angle::constrain_angle_two_pi<T>(angle1));
 
-	// test when angle is constrained with custom
-	CHECK_FLOATING_POINT(T, angle1 + Angle::TwoPi<T>(),
-	                     Angle::constrain_angle<T>(angle1, Angle::HalfPi<T>(), Angle::TwoPi<T>() + Angle::HalfPi<T>()));
-
 	// test when angle is over 2 pi
 	CHECK_FLOATING_POINT(T, (T) 0.2, Angle::constrain_angle_two_pi(angle2));
 	// test when angle is over pi
@@ -50,27 +46,10 @@ void TestConstrainAngle() {
 
 	// test when angle is way under two pi
 	CHECK_FLOATING_POINT(T, (T) 0.1, Angle::constrain_angle_pi(angle7));
-
-	// test when function should throw error
-	try {
-		Angle::constrain_angle<T>(angle1, -1.0, 6.0);
-		FAIL();
-	} catch (const std::invalid_argument &e) {}
-
-	try {
-		Angle::constrain_angle<T>(angle1, Angle::Pi<T>(), -Angle::Pi<T>());
-		FAIL();
-	} catch (const std::invalid_argument &e) {}
-
-	try {
-		Angle::constrain_angle<T>(angle1, 4.0, 6.0);
-		FAIL();
-	} catch (const std::invalid_argument &e) {}
 }
 
 template<class T>
 void TestAngleDist() {
-
 	// testing simplest case
 	T angle1 = 0.1;
 	T angle2 = 0.2;
@@ -120,6 +99,14 @@ void TestAngleDist() {
 	CHECK_FLOATING_POINT(T, Angle::angle_dist<T>(angle2, angle1), (T) 0.32);
 }
 
+template <class T>
+void TestAngleInterp() {
+    T angle1 = 0;
+    T angle2 = Angle::Pi<T>();
+
+    //CHECK_FLOATING_POINT(T, Angle::angle_interp(angle1, angle2, (T) 0.5), Angle::HalfPi<T>());
+}
+
 TEST(Angle, Constants) {
 	// testing float version
 	TestConstants<float>();
@@ -146,6 +133,14 @@ TEST(Angle, AngleDist) {
 
 	// testing double version
 	TestAngleDist<double>();
+}
+
+TEST(angle, AngleInterp) {
+    // testing float version
+    TestAngleInterp<float>();
+
+    // testing double version
+    TestAngleInterp<double>();
 }
 
 int main(int argc, char *argv[]) {

@@ -14,13 +14,25 @@
 namespace Eigen {
 
 template<class T>
-using Matrix3 = Eigen::Matrix<T, 3, 3>;
-
-template<class T>
 using Vector3 = Eigen::Matrix<T, 3, 1>;
 
 template<class T>
 using Vector4 = Eigen::Matrix<T, 4, 1>;
+
+template <class T>
+using VectorX = Eigen::Matrix<T, Eigen::Dynamic, 1>;
+
+template<class T>
+using Matrix3 = Eigen::Matrix<T, 3, 3>;
+
+template<class T>
+using Matrix4 = Eigen::Matrix<T, 4, 4>;
+
+template <class T>
+using Matrix4X = Eigen::Matrix<T, 4, Eigen::Dynamic>;
+
+template <class T>
+using MatrixXX = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
 
 }
 
@@ -33,6 +45,8 @@ const float eps = 1e-12;
 
 template<class T>
 T threshold(T val, T min, T max);
+
+
 }
 }
 

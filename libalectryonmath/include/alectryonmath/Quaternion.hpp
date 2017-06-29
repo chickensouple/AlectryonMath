@@ -8,18 +8,30 @@
 #include <Eigen/Dense>
 #include <alectryonmath/AlectryonMath.hpp>
 
-// Function Definitions
+// Quaternions will be represented as vectors of 4 elements (w, x, y, z)
 namespace Alectryon {
 namespace Transform {
 
 template <class T>
-Eigen::Vector4<T> quat_multiply(const Eigen::Vector4<T> &quat1, const Eigen::Vector4<T> &quat2);
+void quat_multiply(Eigen::Matrix4X<T> &quats_res, const Eigen::Matrix4X<T> &quats1, const Eigen::Matrix4X<T> &quats2);
 
 template <class T>
-Eigen::Vector4<T> quat_inv(const Eigen::Vector4<T> &quat);
+Eigen::Matrix4X<T> quat_multiply(const Eigen::Matrix4X<T> &quats1, const Eigen::Matrix4X<T> &quats2);
 
 template <class T>
-void quat_inv_inplace(Eigen::Vector4<T> &quat);
+void quat_normalize(Eigen::Matrix4X<T> &dest, const Eigen::Matrix4X<T> &src);
+
+template <class T>
+Eigen::Matrix4X<T> quat_normalize(const Eigen::Matrix4X<T> &src);
+
+template <class T>
+void quat_normalize_inplace(Eigen::Matrix4X<T> &quat);
+
+template <class T>
+Eigen::Matrix4X<T> quat_inv(const Eigen::Matrix4X<T> &quat);
+
+template <class T>
+void quat_inv_inplace(Eigen::Matrix4X<T> &quat);
 
 }
 }
@@ -29,26 +41,70 @@ namespace Alectryon {
 namespace Transform {
 
 template <class T>
-Eigen::Vector4<T> quat_multiply(const Eigen::Vector4<T> &quat1, const Eigen::Vector4<T> &quat2) {
-	Eigen::Vector4<T> quat;
-	quat(0) = (quat1(0)*quat2(0)) - (quat1(1)*quat2(1)) - (quat1(2)*quat2(2)) - (quat1(3)*quat2(3));
-	quat(1) = (quat1(0)*quat2(1)) + (quat1(1)*quat2(0)) + (quat1(2)*quat2(3)) - (quat1(3)*quat2(2));
-	quat(2) = (quat1(0)*quat2(2)) - (quat1(1)*quat2(3)) + (quat1(2)*quat2(0)) + (quat1(3)*quat2(1));
-	quat(3) = (quat1(0)*quat2(3)) + (quat1(1)*quat2(2)) - (quat1(2)*quat2(1)) + (quat1(3)*quat2(0));
+void quat_multiply(Eigen::Matrix4X<T> &quats_res, const Eigen::Matrix4X<T> &quats1, const Eigen::Matrix4X<T> &quats2) {
+    if (quats1.cols() != quats2.cols() or quats_res.cols() != quats1.cols()) {
+        throw std::runtime_error("Multiplication must be between the same number of quaternions.");
+    }
 
-	return quat;
+    quats_res.row(0) = quats1.row(0).cwiseProduct(quats2.row(0)) -
+                   quats1.row(1).cwiseProduct(quats2.row(1)) -
+                   quats1.row(2).cwiseProduct(quats2.row(2)) -
+                   quats1.row(3).cwiseProduct(quats2.row(3));
+
+    quats_res.row(1) = quats1.row(0).cwiseProduct(quats2.row(1)) +
+                   quats1.row(1).cwiseProduct(quats2.row(0)) +
+                   quats1.row(2).cwiseProduct(quats2.row(3)) -
+                   quats1.row(3).cwiseProduct(quats2.row(2));
+
+    quats_res.row(2) = quats1.row(0).cwiseProduct(quats2.row(2)) -
+                   quats1.row(1).cwiseProduct(quats2.row(3)) +
+                   quats1.row(2).cwiseProduct(quats2.row(0)) +
+                   quats1.row(3).cwiseProduct(quats2.row(1));
+
+    quats_res.row(3) = quats1.row(0).cwiseProduct(quats2.row(3)) +
+                   quats1.row(1).cwiseProduct(quats2.row(2)) -
+                   quats1.row(2).cwiseProduct(quats2.row(1)) +
+                   quats1.row(3).cwiseProduct(quats2.row(0));
 }
 
 template <class T>
-Eigen::Vector4<T> quat_inv(const Eigen::Vector4<T> &quat) {
-	Eigen::Vector4<T> quat_inv = quat;
-	quat_inv.tail(3) = -quat_inv.tail(3);
-	return quat_inv;
+Eigen::Matrix4X<T> quat_multiply(const Eigen::Matrix4X<T> &quats1, const Eigen::Matrix4X<T> &quats2) {
+
+    Eigen::Matrix4X<T> quats(4, quats1.cols());
+    quat_multiply(quats, quats1, quats2);
+    return quats;
 }
 
 template <class T>
-void quat_inv_inplace(Eigen::Vector4<T> &quat) {
-	quat.tail(3) = -quat.tail(3);
+void quat_normalize(Eigen::Matrix4X<T> &dest, const Eigen::Matrix4X<T> &src) {
+    Eigen::VectorX<T> norms = src.colwise().norm();
+
+    dest = src.array().rowwise() / norms.transpose().array();
+}
+
+template <class T>
+Eigen::Matrix4X<T> quat_normalize(const Eigen::Matrix4X<T> &src) {
+    Eigen::Matrix4X<T> dest;
+    quat_normalize(dest, src);
+    return dest;
+}
+
+template <class T>
+void quat_normalize_inplace(Eigen::Matrix4X<T> &quat) {
+    quat_normalize(quat, quat);
+}
+
+template <class T>
+Eigen::Matrix4X<T> quat_inv(const Eigen::Matrix4X<T> &quat) {
+    Eigen::Matrix4X<T> quat_inv(quat);
+
+    quat_inv.bottomRows(3) = -quat_inv.bottomRows(3);
+    return quat_inv;
+}
+
+template <class T>
+void quat_inv_inplace(Eigen::Matrix4X<T> &quat) {
+	quat.bottomRows(3) = -quat.bottomRows(3);
 }
 
 }
