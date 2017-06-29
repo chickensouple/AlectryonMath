@@ -40,7 +40,6 @@ T angle_interp(T angle1, T angle2, T alpha);
 
 
 
-
 // Implementation
 namespace Alectryon {
 namespace Angle {
