@@ -128,8 +128,10 @@ void TestAngleInterp() {
     CHECK_FLOATING_POINT(T, Angle::angle_interp(angle1, angle2, (T) 0.5), Angle::Pi<T>());
     CHECK_FLOATING_POINT(T, Angle::angle_interp(angle2, angle1, (T) 0.5), Angle::Pi<T>());
 
-    CHECK_FLOATING_POINT(T, Angle::angle_interp(angle1, angle2, (T) 0.3), Angle::Pi<T>() - 0.4 * (Angle::HalfPi<T>() / 2));
-    CHECK_FLOATING_POINT(T, Angle::angle_interp(angle2, angle1, (T) 0.3), Angle::Pi<T>() + 0.4 * (Angle::HalfPi<T>() / 2));
+    CHECK_FLOATING_POINT(T, Angle::angle_interp(angle1, angle2, (T) 0.3),
+                         Angle::Pi<T>() - 0.4 * (Angle::HalfPi<T>() / 2));
+    CHECK_FLOATING_POINT(T, Angle::angle_interp(angle2, angle1, (T) 0.3),
+                         Angle::Pi<T>() + 0.4 * (Angle::HalfPi<T>() / 2));
 
     // test corner cases
     angle1 = 0.4;

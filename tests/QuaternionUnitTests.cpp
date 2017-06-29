@@ -16,14 +16,14 @@ TEST(quaternion, multiplication) {
 
 
     quats1 << 1, 1,
-              0, 2,
-              0, 3,
-              0, -1.2;
+            0, 2,
+            0, 3,
+            0, -1.2;
 
     quats2 << 2, 1,
-              -1, 0,
-              0.2, 0,
-              1, 0;
+            -1, 0,
+            0.2, 0,
+            1, 0;
 
     Eigen::Matrix4X<float> quat = quat_multiply(quats1, quats2);
 
