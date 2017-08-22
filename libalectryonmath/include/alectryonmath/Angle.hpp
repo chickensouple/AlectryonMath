@@ -13,7 +13,7 @@
 
 // Function Definitions
 namespace Alectryon {
-namespace Angle {
+namespace Math {
 template<class T>
 constexpr T Pi();
 
@@ -78,22 +78,7 @@ T angle_interp(T angle1, T angle2, T alpha);
 
 // Implementation
 namespace Alectryon {
-namespace Angle {
-
-template<class T>
-constexpr T Pi() {
-    return M_PI;
-}
-
-template<class T>
-constexpr T TwoPi() {
-    return 2.0 * Pi<T>();
-}
-
-template<class T>
-constexpr T HalfPi() {
-    return 0.5 * Pi<T>();
-}
+namespace Math {
 
 
 template<class T>

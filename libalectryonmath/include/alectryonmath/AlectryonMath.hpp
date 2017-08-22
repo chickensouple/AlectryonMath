@@ -29,13 +29,19 @@ template<class T>
 using Matrix4 = Eigen::Matrix<T, 4, 4>;
 
 template<class T>
+using Matrix5 = Eigen::Matrix<T, 5, 5>;
+
+template<class T>
 using Matrix3X = Eigen::Matrix<T, 3, Eigen::Dynamic>;
 
 template<class T>
 using Matrix4X = Eigen::Matrix<T, 4, Eigen::Dynamic>;
 
 template<class T>
-using MatrixXX = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
+using MatrixX = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
+
+template<class T>
+using ArrayX = Eigen::Array<T, Eigen::Dynamic, 1>;
 
 }
 
@@ -47,8 +53,64 @@ namespace Math {
 const float eps = 1e-12;
 
 template<class T>
+constexpr T Pi() {
+    return M_PI;
+}
+
+template<class T>
+constexpr T TwoPi() {
+    return 2.0 * Pi<T>();
+}
+
+template<class T>
+constexpr T HalfPi() {
+    return 0.5 * Pi<T>();
+}
+
+template<class T>
+Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x);
+
+
+template<class T>
 T threshold(T val, T min, T max);
 
+/**
+ * @brief Makes the matrix representation of a cross product with the given vector
+ * @details Makes a matrix A out of a vector v such that for
+ * any vector x, A*x = cross(v, x)
+ *
+ * @tparam T
+ * @param vec
+ * @return skew symmetric matrix
+ */
+template<class T>
+Eigen::Matrix3<T> cross_prod_mat(const Eigen::Vector3<T> &vec);
+
+/**
+* @brief Normalizes a matrix so that the 2-norms of each column are 1
+* @tparam T
+* @param dst
+* @param src
+*/
+template<class T>
+void normalize_mat(Eigen::MatrixX<T> &dst, const Eigen::MatrixX<T> &src);
+
+/**
+* @brief Normalizes a matrix so that the 2-norms of each column are 1
+* @tparam T
+* @param src
+* @return normalized matrix
+*/
+template<class T>
+Eigen::MatrixX<T> normalize_mat(const Eigen::MatrixX<T> &src);
+
+/**
+* @brief Normalizes a matrix so that the 2-norms of each column are 1 inplace
+* @tparam T
+* @param src
+*/
+template<class T>
+void normalize_mat_inplace(Eigen::MatrixX<T> &mat);
 
 }
 }
@@ -56,6 +118,21 @@ T threshold(T val, T min, T max);
 // Implementation
 namespace Alectryon {
 namespace Math {
+
+template<class T>
+Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x) {
+    if (y.rows() != x.rows() or y.cols() != x.cols()) {
+        throw std::runtime_error("y and x must be same size");
+    }
+
+    Eigen::MatrixX<T> dst = x.cwiseInverse().cwiseProduct(y);
+    dst = dst.array().atan();
+    dst = (x.array() < 0).select(dst + Math::Pi<T>() * y.cwiseSign(), dst);
+
+    dst = dst.array().isFinite().select(dst, Eigen::MatrixX<T>::Constant(y.rows(), y.cols(), Math::HalfPi<T>()));
+
+    return dst;
+}
 
 template<class T>
 T threshold(T val, T min, T max) {
@@ -68,17 +145,8 @@ T threshold(T val, T min, T max) {
     return val;
 }
 
-/**
- * @brief Makes the matrix representation of a cross product with the given vector
- * @details Makes a matrix A out of a vector v such that for
- * any vector x, A*x = cross(v, x)
- *
- * @tparam T
- * @param vec
- * @return skew symmetric matrix
- */
 template<class T>
-Eigen::Matrix3<T> cross_prod_matrix(const Eigen::Vector3<T> &vec) {
+Eigen::Matrix3<T> cross_prod_mat(const Eigen::Vector3<T> &vec) {
     Eigen::Matrix3<T> mat;
     mat(0, 0) = 0;
     mat(1, 1) = 0;
@@ -91,6 +159,25 @@ Eigen::Matrix3<T> cross_prod_matrix(const Eigen::Vector3<T> &vec) {
     mat(1, 2) = -vec[0];
     return mat;
 };
+
+template<class T>
+void normalize_mat(Eigen::MatrixX<T> &dst, const Eigen::MatrixX<T> &src) {
+    Eigen::VectorX<T> norms = src.colwise().norm();
+    dst = src.array().rowwise() / norms.transpose().array();
+}
+
+template<class T>
+Eigen::MatrixX<T> normalize_mat(const Eigen::MatrixX<T> &src) {
+    Eigen::MatrixX<T> dst(src.rows(), src.cols());
+    normalize_mat(dst, src);
+    return dst;
+}
+
+template<class T>
+void normalize_mat_inplace(Eigen::MatrixX<T> &mat) {
+    normalize_mat(mat, mat);
+}
+
 
 
 }

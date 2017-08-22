@@ -26,3 +26,7 @@ target_link_libraries(AngleUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMA
 
 add_executable(QuaternionTests tests/QuaternionUnitTests.cpp tests/TestHelpers.h)
 target_link_libraries(QuaternionTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(AlectryonMathTests tests/AlectryonMathUnitTests.cpp tests/TestHelpers.h)
+target_link_libraries(AlectryonMathTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+

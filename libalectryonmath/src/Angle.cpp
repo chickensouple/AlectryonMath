@@ -5,7 +5,7 @@
 #include "alectryonmath/Angle.hpp"
 
 
-//namespace Angle {
+//namespace Math {
 //
 //
 //}
