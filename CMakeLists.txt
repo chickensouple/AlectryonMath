@@ -18,14 +18,14 @@ include_directories(
         ${EIGEN3_INCLUDE_DIR}
         ${GTEST_INCLUDE_DIR})
 
-add_executable(TransformUnitTests tests/TransformUnitTests.cpp)
-target_link_libraries(TransformUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+add_executable(RotationConversionsTests tests/RotationConversionsUnitTests.cpp)
+target_link_libraries(RotationConversionsTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(AngleUnitTests tests/AngleUnitTests.cpp tests/TestHelpers.h)
 target_link_libraries(AngleUnitTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(QuaternionTests tests/QuaternionUnitTests.cpp tests/TestHelpers.h)
-target_link_libraries(QuaternionTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+add_executable(RotationOperationsTests tests/RotationOperationsUnitTests.cpp tests/TestHelpers.h)
+target_link_libraries(RotationOperationsTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(AlectryonMathTests tests/AlectryonMathUnitTests.cpp tests/TestHelpers.h)
 target_link_libraries(AlectryonMathTests alectryonmath ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

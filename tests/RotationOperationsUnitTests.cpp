@@ -6,11 +6,12 @@
 #include <cmath>
 #include "gtest/gtest.h"
 #include "TestHelpers.h"
-#include "alectryonmath/Quaternion.hpp"
+#include <alectryonmath/AlectryonMath.hpp>
+#include <alectryonmath/RotationOperations.hpp>
 
 using namespace Alectryon::Transform;
 
-TEST(quaternion, multiplication) {
+TEST(Transform, QuatMultiply) {
     Eigen::Matrix4X<float> quats1(4, 2);
     Eigen::Matrix4X<float> quats2(4, 2);
 
@@ -25,18 +26,7 @@ TEST(quaternion, multiplication) {
             0.2, 0,
             1, 0;
 
-    Eigen::Matrix4X<float> quat = quat_multiply(quats1, quats2);
-
-
-//    std::cout << quat << "\n";
-
-    Eigen::Matrix4X<float> test;
-    quat_normalize(test, quats1);
-    std::cout << test << "\n";
-
-//    quat_normalize_inplace(quats1);
-    std::cout << quats1 << "\n";
-
+    Eigen::Matrix4X<float> quat = quat_multiply<float>(quats1, quats2);
 }
 
 int main(int argc, char *argv[]) {

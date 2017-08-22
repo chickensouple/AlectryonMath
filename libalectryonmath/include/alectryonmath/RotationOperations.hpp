@@ -8,10 +8,10 @@
 #include <cmath>
 #include <alectryonmath/AlectryonMath.hpp>
 
+// Function Definitions
 namespace Alectryon {
 namespace Transform {
-
-// Function Definitions
+// Rotation Matrix Operations
 template<class T>
 Eigen::Matrix3<T> rotx(T angle);
 
@@ -21,6 +21,22 @@ Eigen::Matrix3<T> roty(T angle);
 template<class T>
 Eigen::Matrix3<T> rotz(T angle);
 
+// Quaternion Operations
+template<class T>
+void quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
+                   const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2,
+                   Eigen::Ref<Eigen::Matrix4X<T>>quats_res);
+
+template<class T>
+Eigen::Matrix4X<T> quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
+                                 const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2);
+
+template<class T>
+Eigen::Matrix4X<T> quat_inv(const Eigen::Ref<const Eigen::Matrix4X<T>> &quat);
+
+template<class T>
+void quat_inv_inplace(Eigen::Ref<Eigen::Matrix4X<T>> quat);
+
 }
 }
 
@@ -28,7 +44,7 @@ Eigen::Matrix3<T> rotz(T angle);
 // Implementation
 namespace Alectryon {
 namespace Transform {
-
+// Rotation Matrix Operations
 template<class T>
 Eigen::Matrix3<T> rotx(T angle) {
     Eigen::Matrix3<T> rotx = Eigen::Matrix3<T>::Zero();
@@ -71,6 +87,57 @@ Eigen::Matrix3<T> rotz(T angle) {
     return rotz;
 }
 
+
+// Quaternion Operations
+template<class T>
+void quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
+                   const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2,
+                   Eigen::Ref<Eigen::Matrix4X<T>>quats_res) {
+    if (quats1.cols() != quats2.cols() or quats_res.cols() != quats1.cols()) {
+        throw std::runtime_error("Multiplication must be between the same number of quaternions.");
+    }
+
+    quats_res.row(0) = quats1.row(0).cwiseProduct(quats2.row(0)) -
+                       quats1.row(1).cwiseProduct(quats2.row(1)) -
+                       quats1.row(2).cwiseProduct(quats2.row(2)) -
+                       quats1.row(3).cwiseProduct(quats2.row(3));
+
+    quats_res.row(1) = quats1.row(0).cwiseProduct(quats2.row(1)) +
+                       quats1.row(1).cwiseProduct(quats2.row(0)) +
+                       quats1.row(2).cwiseProduct(quats2.row(3)) -
+                       quats1.row(3).cwiseProduct(quats2.row(2));
+
+    quats_res.row(2) = quats1.row(0).cwiseProduct(quats2.row(2)) -
+                       quats1.row(1).cwiseProduct(quats2.row(3)) +
+                       quats1.row(2).cwiseProduct(quats2.row(0)) +
+                       quats1.row(3).cwiseProduct(quats2.row(1));
+
+    quats_res.row(3) = quats1.row(0).cwiseProduct(quats2.row(3)) +
+                       quats1.row(1).cwiseProduct(quats2.row(2)) -
+                       quats1.row(2).cwiseProduct(quats2.row(1)) +
+                       quats1.row(3).cwiseProduct(quats2.row(0));
+}
+
+template<class T>
+Eigen::Matrix4X<T> quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
+                                 const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2) {
+    Eigen::Matrix4X<T> quats(4, quats1.cols());
+    quat_multiply<T>(quats1, quats2, quats);
+    return quats;
+}
+
+template<class T>
+Eigen::Matrix4X<T> quat_inv(const Eigen::Ref<const Eigen::Matrix4X<T>> &quat) {
+    Eigen::Matrix4X<T> quat_inv(quat);
+
+    quat_inv.bottomRows(3) = -quat_inv.bottomRows(3);
+    return quat_inv;
+}
+
+template<class T>
+void quat_inv_inplace(Eigen::Ref<Eigen::Matrix4X<T>>quat) {
+    quat.bottomRows(3) = -quat.bottomRows(3);
+}
 
 }
 }

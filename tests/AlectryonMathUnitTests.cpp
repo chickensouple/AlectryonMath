@@ -23,16 +23,16 @@ void NormalizeTest() {
                0.78811040623910066927,  0.88045090632562383881,
                0.47286624374346042377, -0.17609018126512479552;
 
-    Eigen::MatrixX<T> mat_norm;
-    Math::normalize_mat(mat_norm, mat);
+    Eigen::MatrixX<T> mat_norm(3, 2);
+    Math::normalize_mat<T>(mat, mat_norm);
     CHECK_FLOATING_ARR(T, 6, mat_ans, mat_norm);
 
     mat_norm = mat;
-    mat_norm = Math::normalize_mat(mat);
+    mat_norm = Math::normalize_mat<T>(mat);
     CHECK_FLOATING_ARR(T, 6, mat_ans, mat_norm);
 
     mat_norm = mat;
-    Math::normalize_mat_inplace(mat_norm);
+    Math::normalize_mat_inplace<T>(mat_norm);
     CHECK_FLOATING_ARR(T, 6, mat_ans, mat_norm);
 }
 

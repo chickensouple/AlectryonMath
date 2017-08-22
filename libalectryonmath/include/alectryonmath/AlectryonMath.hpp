@@ -87,7 +87,7 @@ constexpr T HalfPi() {
  * @return
  */
 template<class T>
-Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x);
+Eigen::MatrixX<T> atan2(const Eigen::Ref<const Eigen::MatrixX<T>> &y, const Eigen::Ref<const Eigen::MatrixX<T>> &x);
 
 
 template<class T>
@@ -112,7 +112,7 @@ Eigen::Matrix3<T> cross_prod_mat(const Eigen::Vector3<T> &vec);
 * @param src
 */
 template<class T>
-void normalize_mat(Eigen::MatrixX<T> &dst, const Eigen::MatrixX<T> &src);
+void normalize_mat(const Eigen::Ref<const Eigen::MatrixX<T>> &src, Eigen::Ref<Eigen::MatrixX<T>> dst);
 
 /**
 * @brief Normalizes a matrix so that the 2-norms of each column are 1
@@ -121,7 +121,7 @@ void normalize_mat(Eigen::MatrixX<T> &dst, const Eigen::MatrixX<T> &src);
 * @return normalized matrix
 */
 template<class T>
-Eigen::MatrixX<T> normalize_mat(const Eigen::MatrixX<T> &src);
+Eigen::MatrixX<T> normalize_mat(const Eigen::Ref<const Eigen::MatrixX<T>> &src);
 
 /**
 * @brief Normalizes a matrix so that the 2-norms of each column are 1 inplace
@@ -129,7 +129,7 @@ Eigen::MatrixX<T> normalize_mat(const Eigen::MatrixX<T> &src);
 * @param src
 */
 template<class T>
-void normalize_mat_inplace(Eigen::MatrixX<T> &mat);
+void normalize_mat_inplace(Eigen::Ref<Eigen::MatrixX<T>> mat);
 
 }
 }
@@ -139,7 +139,7 @@ namespace Alectryon {
 namespace Math {
 
 template<class T>
-Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x) {
+Eigen::MatrixX<T> atan2(const Eigen::Ref<const Eigen::MatrixX<T>> &y, const Eigen::Ref<const Eigen::MatrixX<T>> &x) {
     if (y.rows() != x.rows() or y.cols() != x.cols()) {
         throw std::runtime_error("y and x must be same size");
     }
@@ -176,21 +176,21 @@ Eigen::Matrix3<T> cross_prod_mat(const Eigen::Vector3<T> &vec) {
 };
 
 template<class T>
-void normalize_mat(Eigen::MatrixX<T> &dst, const Eigen::MatrixX<T> &src) {
+void normalize_mat(const Eigen::Ref<const Eigen::MatrixX<T>> &src, Eigen::Ref<Eigen::MatrixX<T>> dst) {
     Eigen::VectorX<T> norms = src.colwise().norm();
     dst = src.array().rowwise() / norms.transpose().array();
 }
 
 template<class T>
-Eigen::MatrixX<T> normalize_mat(const Eigen::MatrixX<T> &src) {
+Eigen::MatrixX<T> normalize_mat(const Eigen::Ref<const Eigen::MatrixX<T>> &src) {
     Eigen::MatrixX<T> dst(src.rows(), src.cols());
-    normalize_mat(dst, src);
+    normalize_mat<T>(src, dst);
     return dst;
 }
 
 template<class T>
-void normalize_mat_inplace(Eigen::MatrixX<T> &mat) {
-    normalize_mat(mat, mat);
+void normalize_mat_inplace(Eigen::Ref<Eigen::MatrixX<T>> mat) {
+    normalize_mat<T>(mat, mat);
 }
 
 

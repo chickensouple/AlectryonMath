@@ -8,5 +8,5 @@ include_directories(
         include
         ${EIGEN3_INCLUDE_DIR})
 
-set(SOURCE_FILES include/alectryonmath/Angle.hpp src/Angle.cpp src/RotationConversions.cpp include/alectryonmath/AlectryonMath.hpp include/alectryonmath/Quaternion.hpp include/alectryonmath/RotationOperations.hpp)
+set(SOURCE_FILES include/alectryonmath/Angle.hpp src/Angle.cpp src/RotationConversions.cpp include/alectryonmath/AlectryonMath.hpp include/alectryonmath/RotationOperations.hpp)
 add_library(alectryonmath ${SOURCE_FILES})
