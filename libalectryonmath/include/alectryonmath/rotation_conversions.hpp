@@ -8,7 +8,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <type_traits>
-#include <alectryonmath/AlectryonMath.hpp>
+#include <alectryonmath/alectryon_math.hpp>
 
 /**
  * Rotation Matrices are repented by 3 by 3 matrices

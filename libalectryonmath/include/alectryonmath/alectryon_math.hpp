@@ -60,6 +60,7 @@ using ArrayX = Eigen::Array<T, Eigen::Dynamic, 1>;
 // Function Definitions
 namespace Alectryon {
 namespace Math {
+
 // TODO: instead of using eps, use relative floating point error (http://floating-point-gui.de/errors/comparison/)
 const float eps = 1e-12;
 
@@ -144,7 +145,7 @@ Eigen::MatrixX<T> atan2(const Eigen::Ref<const Eigen::MatrixX<T>> &y, const Eige
         throw std::runtime_error("y and x must be same size");
     }
 
-    auto atan2_helper = [](const T &y, const T &x) {return std::atan2(y, x);};
+    auto atan2_helper = [](const T &y, const T &x) { return std::atan2(y, x); };
     Eigen::MatrixX<T> dst = y.binaryExpr(x, atan2_helper);
     return dst;
 }
@@ -192,7 +193,6 @@ template<class T>
 void normalize_mat_inplace(Eigen::Ref<Eigen::MatrixX<T>> mat) {
     normalize_mat<T>(mat, mat);
 }
-
 
 
 }

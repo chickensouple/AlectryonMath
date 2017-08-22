@@ -6,7 +6,7 @@
 #define ALECTYONMATH_ROTATIONOPERATIONS_HPP
 
 #include <cmath>
-#include <alectryonmath/AlectryonMath.hpp>
+#include <alectryonmath/alectryon_math.hpp>
 
 // Function Definitions
 namespace Alectryon {

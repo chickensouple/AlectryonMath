@@ -5,7 +5,7 @@
 #include <iostream>
 #include "gtest/gtest.h"
 #include "TestHelpers.h"
-#include <alectryonmath/RotationConversions.hpp>
+#include <alectryonmath/rotation_conversions.hpp>
 
 using namespace Alectryon;
 

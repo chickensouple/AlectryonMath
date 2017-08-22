@@ -9,7 +9,7 @@
 #include <cmath>
 #include <exception>
 #include <stdexcept>
-#include <alectryonmath/AlectryonMath.hpp>
+#include "alectryon_math.hpp"
 
 // Function Definitions
 namespace Alectryon {

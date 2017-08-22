@@ -6,7 +6,7 @@
 #include <cmath>
 #include "gtest/gtest.h"
 #include "TestHelpers.h"
-#include "alectryonmath/Angle.hpp"
+#include <alectryonmath/alectryon_angle.hpp>
 
 using namespace Alectryon;
 

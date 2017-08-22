@@ -7,7 +7,7 @@
 #include <functional>
 #include "gtest/gtest.h"
 #include "TestHelpers.h"
-#include <alectryonmath/AlectryonMath.hpp>
+#include <alectryonmath/alectryon_math.hpp>
 
 using namespace Alectryon;
 
