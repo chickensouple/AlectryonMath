@@ -25,6 +25,15 @@ template<class T>
 using VectorX = Eigen::Matrix<T, Eigen::Dynamic, 1>;
 
 template<class T>
+using RowVector3 = Eigen::Matrix<T, 1, 3>;
+
+template<class T>
+using RowVector4 = Eigen::Matrix<T, 1, 4>;
+
+template<class T>
+using RowVectorX = Eigen::Matrix<T, 1, Eigen::Dynamic>;
+
+template<class T>
 using Matrix3 = Eigen::Matrix<T, 3, 3>;
 
 template<class T>
@@ -71,10 +80,6 @@ constexpr T HalfPi() {
 
 /**
  * @brief Coefficient-wise atan2
- * @details Works like std::atan2 with a few caveats
- * in (y, x) pairs
- * (0, 0) gives pi/2
- * (inf, inf) gives pi/2
  *
  * @tparam T
  * @param y
