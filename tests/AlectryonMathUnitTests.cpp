@@ -50,7 +50,6 @@ void Atan2Test() {
     Eigen::Matrix<T, 7, 7> sin_angles = angles.array().sin();
     Eigen::Matrix<T, 7, 7> cos_angles = angles.array().cos();
 
-
     Eigen::Matrix<T, 7, 7> atan2_angles_ans;
     for (int i = 0; i < 7; i++)
         for (int j = 0; j < 7; j++)
@@ -61,16 +60,18 @@ void Atan2Test() {
 
     // testing boundary cases
     T inf = std::numeric_limits<T>::infinity();
-    Eigen::VectorX<T> y(8);
-    Eigen::VectorX<T> x(8);
-    y << 1.2, -1, inf, inf, inf,  0,   0.2, -4.6;
-    x << 0,   0,  0,   0.2, -6.1, inf, inf, inf;
+    int num = 16;
+    Eigen::VectorX<T> y(num);
+    Eigen::VectorX<T> x(num);
+    y << -inf, inf, 1.2, -1, inf, inf, inf,  0,   0.2, -4.6,
+            -inf, -inf, -inf, 0,    0.2,  -4.6;
+    x << -inf, inf, 0,   0,  0,   0.2, -6.1, inf, inf, inf,
+            0,    0.2,  -6.1, -inf, -inf, -inf;
 
     Eigen::VectorX<T> atan2_test = Math::atan2<T>(y, x);
-    Eigen::VectorX<T> atan2_ans(8);
-    for (int i = 0; i < 8; i++) atan2_ans[i] = std::atan2(y[i], x[i]);
-    
-    CHECK_FLOATING_ARR(T, 8, atan2_ans, atan2_test);
+    Eigen::VectorX<T> atan2_ans(num);
+    for (int i = 0; i < num; i++) atan2_ans[i] = std::atan2(y[i], x[i]);
+    CHECK_FLOATING_ARR(T, num, atan2_ans, atan2_test);
 }
 
 TEST(Math, Atan2) {

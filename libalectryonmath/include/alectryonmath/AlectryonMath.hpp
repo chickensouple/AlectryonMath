@@ -7,6 +7,8 @@
 
 #include <exception>
 #include <stdexcept>
+#include <functional>
+#include <cmath>
 
 #include <Eigen/Dense>
 
@@ -67,6 +69,18 @@ constexpr T HalfPi() {
     return 0.5 * Pi<T>();
 }
 
+/**
+ * @brief Coefficient-wise atan2
+ * @details Works like std::atan2 with a few caveats
+ * in (y, x) pairs
+ * (0, 0) gives pi/2
+ * (inf, inf) gives pi/2
+ *
+ * @tparam T
+ * @param y
+ * @param x
+ * @return
+ */
 template<class T>
 Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x);
 
@@ -125,12 +139,8 @@ Eigen::MatrixX<T> atan2(const Eigen::MatrixX<T> &y, const Eigen::MatrixX<T> &x) 
         throw std::runtime_error("y and x must be same size");
     }
 
-    Eigen::MatrixX<T> dst = x.cwiseInverse().cwiseProduct(y);
-    dst = dst.array().atan();
-    dst = (x.array() < 0).select(dst + Math::Pi<T>() * y.cwiseSign(), dst);
-
-    dst = dst.array().isFinite().select(dst, Eigen::MatrixX<T>::Constant(y.rows(), y.cols(), Math::HalfPi<T>()));
-
+    auto atan2_helper = [](const T &y, const T &x) {return std::atan2(y, x);};
+    Eigen::MatrixX<T> dst = y.binaryExpr(x, atan2_helper);
     return dst;
 }
 
