@@ -11,13 +11,21 @@ using namespace Alectryon;
 
 template<class T>
 void TestConvertQuat() {
+    // Quaternion with no rotation
+    Eigen::Vector4<T> quat(0.2, 0, 1, 2);
+    Math::normalize_mat_inplace(quat);
 
+    Eigen::Matrix3<T> rot;
+    rot = Transform::quat_to_rot(quat);
+    Eigen::Matrix3<T> rot_ans;
+//    rot_ans <<
 }
+
 
 template<class T>
 void TestConvertAa3() {
     // checking for no rotation
-    Eigen::Matrix<T, 3, 1> aa3(0, 0, 0);
+    Eigen::Vector3<T> aa3(0, 0, 0);
 
     Eigen::Vector4<T> quat = Transform::aa3_to_quat<T>(aa3);
     Eigen::Vector4<T> quat_ans(1, 0, 0, 0);
@@ -48,8 +56,8 @@ void TestConvertAa4() {
     Eigen::Vector4<T> quat = Transform::aa4_to_quat<T>(aa4);
     Eigen::Vector4<T> quat_ans(1, 0, 0, 0);
     CHECK_FLOATING_ARR(T, 4, quat_ans, quat);
-    Eigen::Matrix<T, 3, 1> aa3 = Transform::aa4_to_aa3<T>(aa4);
-    Eigen::Matrix<T, 3, 1> aa3_ans(0, 0, 0);
+    Eigen::Vector3<T> aa3 = Transform::aa4_to_aa3<T>(aa4);
+    Eigen::Vector3<T> aa3_ans(0, 0, 0);
     CHECK_FLOATING_ARR(T, 3, aa3_ans, aa3);
 
 

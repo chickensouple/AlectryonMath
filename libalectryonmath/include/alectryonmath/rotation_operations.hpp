@@ -13,6 +13,9 @@ namespace Alectryon {
 namespace Transform {
 // Rotation Matrix Operations
 template<class T>
+Eigen::Matrix2<T> rot2d(T angle);
+
+template<class T>
 Eigen::Matrix3<T> rotx(T angle);
 
 template<class T>
@@ -22,11 +25,35 @@ template<class T>
 Eigen::Matrix3<T> rotz(T angle);
 
 // Quaternion Operations
+/**
+ * @brief Creates a unit quaternion
+ */
+template<class T>
+Eigen::Vector4<T> quat_unit();
+
+/**
+ * @brief Quaternion Multiplication. Calculates quats_res = quats1 * quats2
+ * @details quats1, quats2, and quats_res must all be the same size
+ * The size must be 4 by N, where each column is a separate quaternion
+ * the quaternions are multiplied such that quats_res[:, i] = quats1[:, i] * quats2[:, i]
+ *
+ * @param quats1
+ * @param quats2
+ * @param quats_res
+ */
 template<class T>
 void quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
                    const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2,
-                   Eigen::Ref<Eigen::Matrix4X<T>>quats_res);
+                   Eigen::Ref<Eigen::Matrix4X<T>> quats_res);
 
+/**
+ * @brief Quaternion Multiplication
+ *
+ * @tparam T
+ * @param quats1
+ * @param quats2
+ * @return results of multiplication
+ */
 template<class T>
 Eigen::Matrix4X<T> quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
                                  const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2);
@@ -40,11 +67,23 @@ void quat_inv_inplace(Eigen::Ref<Eigen::Matrix4X<T>> quat);
 }
 }
 
-
 // Implementation
 namespace Alectryon {
 namespace Transform {
 // Rotation Matrix Operations
+template<class T>
+Eigen::Matrix2<T> rot2d(T angle) {
+    Eigen::Matrix2<T> rot;
+    T cos_ang = std::cos(angle);
+    T sin_ang = std::sin(angle);
+
+    rot(0, 0) = cos_ang;
+    rot(0, 1) = -sin_ang;
+    rot(1, 0) = sin_ang;
+    rot(1, 1) = cos_ang;
+    return rot;
+}
+
 template<class T>
 Eigen::Matrix3<T> rotx(T angle) {
     Eigen::Matrix3<T> rotx = Eigen::Matrix3<T>::Zero();
@@ -90,9 +129,17 @@ Eigen::Matrix3<T> rotz(T angle) {
 
 // Quaternion Operations
 template<class T>
+Eigen::Vector4<T> quat_unit() {
+    Eigen::Vector4<T> quat = Eigen::Vector4<T>::Zero();
+    quat[0] = 1;
+    return quat;
+}
+
+
+template<class T>
 void quat_multiply(const Eigen::Ref<const Eigen::Matrix4X<T>> &quats1,
                    const Eigen::Ref<const Eigen::Matrix4X<T>> &quats2,
-                   Eigen::Ref<Eigen::Matrix4X<T>>quats_res) {
+                   Eigen::Ref<Eigen::Matrix4X<T>> quats_res) {
     if (quats1.cols() != quats2.cols() or quats_res.cols() != quats1.cols()) {
         throw std::runtime_error("Multiplication must be between the same number of quaternions.");
     }

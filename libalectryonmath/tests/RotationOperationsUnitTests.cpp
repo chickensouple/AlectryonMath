@@ -29,21 +29,6 @@ TEST(Transform, QuatMultiply) {
     Eigen::Matrix4X<float> quat = quat_multiply<float>(quats1, quats2);
 }
 
-template <class T>
-void test(Eigen::Ref<Eigen::MatrixX<T>> mat) {
-    std::cout << "template\n";
-}
-
-void test(Eigen::Ref<Eigen::MatrixXf> mat) {
-    std::cout << "float\n";
-}
-
-void test(Eigen::Ref<Eigen::MatrixXd> mat) {
-    std::cout << "double\n";
-}
-
-
-
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -34,21 +34,35 @@ namespace Alectryon {
 namespace Transform {
 
 // Rotation Matrix Conversions
-// TODO: rot_to_quat, rot_to_aa3, rot_to_aa4
-// TODO: rot_to_eulerXYZ
+template<class T>
+void rot_to_quat(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector4<T>> quat);
+
+template<class T>
+Eigen::Vector4<T> rot_to_quat(const Eigen::Ref<const Eigen::Matrix3<T>> &rot);
+
+template<class T>
+void rot_to_aa3(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> aa3);
+
+template<class T>
+Eigen::Vector3<T> rot_to_aa3(const Eigen::Ref<const Eigen::Matrix3<T>> &rot);
+
+template<class T>
+void rot_to_aa4(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> aa4);
+
+template<class T>
+Eigen::Vector4<T> rot_to_aa4(const Eigen::Ref<const Eigen::Matrix3<T>> &rot);
 
 template<class T>
 void rot_to_eulerZYX(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> eulerZYX);
- 
+
 template<class T>
 Eigen::Vector3<T> rot_to_eulerZYX(const Eigen::Ref<const Eigen::Matrix3<T>> &rot);
+
+// TODO: rot_to_eulerXYZ
 
 // Quaternion Conversions
 template<class T>
 void quat_to_rot(const Eigen::Ref<const Eigen::Vector4<T>> &quat, Eigen::Ref<Eigen::Matrix3<T>> rot);
-
-template<class T>
-Eigen::Matrix3<T> quat_to_rot(const Eigen::Ref<const Eigen::Vector4<T>> &quat);
 
 template<class T>
 Eigen::Matrix3<T> quat_to_rot(const Eigen::Ref<const Eigen::Vector4<T>> &quat);
@@ -135,6 +149,84 @@ Eigen::Matrix3X<T> aa4_to_aa3(const Eigen::Ref<const Eigen::Matrix4X<T>> &aa4);
 namespace Alectryon {
 namespace Transform {
 // Rotation Matrix Conversions
+template<class T>
+void rot_to_quat(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector4<T>> quat) {
+    T trace = rot.trace();
+
+    if (trace > 0) {
+        float S = std::sqrt(trace + 1) * 2;
+        quat(0) = 0.25 * S;
+        S = 1.0 / S;
+        quat(1) = (rot(2, 1) - rot(1, 2)) * S;
+        quat(2) = (rot(0, 2) - rot(2, 0)) * S;
+        quat(3) = (rot(1, 0) - rot(0, 1)) * S;
+    } else if ((rot(0, 0) > rot(1, 1)) and (rot(0, 0) > rot(2, 2))) {
+        float S = std::sqrt(1 + rot(0, 0) - rot(1, 1) - rot(2, 2)) * 2;
+        quat[1] = 0.25 * S;
+        S = 1.0 / S;
+        quat[0] = (rot(2, 1) - rot(1, 2)) * S;
+        quat[2] = (rot(0, 1) + rot(1, 0)) * S;
+        quat[3] = (rot(0, 2) + rot(2, 0)) * S;
+    } else if (rot(1, 1) > rot(2, 2)) {
+        float S = std::sqrt(1 + rot(1, 1) - rot(0, 0) - rot(2, 2)) * 2;
+        quat[2] = 0.25 * S;
+        S = 1.0 / S;
+        quat[0] = (rot(0, 2) - rot(2, 0)) * S;
+        quat[1] = (rot(0, 1) + rot(1, 0)) * S;
+        quat[3] = (rot(1, 2) + rot(2, 1)) * S;
+    } else {
+        float S = std::sqrt(1 + rot(2, 2) - rot(0, 0) - rot(1, 1)) * 2;
+        quat[3] = 0.25 * S;
+        S = 1.0 / S;
+        quat[0] = (rot(1, 0) - rot(0, 1)) * S;
+        quat[1] = (rot(0, 2) + rot(2, 0)) * S;
+        quat[2] = (rot(1, 2) + rot(2, 1)) * S;
+    }
+}
+
+template<class T>
+Eigen::Vector4<T> rot_to_quat(const Eigen::Ref<const Eigen::Matrix3<T>> &rot) {
+    Eigen::Vector4<T> quat;
+    rot_to_quat<T>(rot, quat);
+    return quat;
+}
+
+template<class T>
+void rot_to_aa3(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> aa3) {
+    aa4_to_aa3<T>(rot_to_aa4<T>(rot), aa3);
+}
+
+template<class T>
+Eigen::Vector3<T> rot_to_aa3(const Eigen::Ref<const Eigen::Matrix3<T>> &rot) {
+    Eigen::Vector3<T> aa3;
+    rot_to_aa3<T>(rot, aa3);
+    return aa3;
+}
+
+template<class T>
+void rot_to_aa4(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> aa4) {
+    T cos_ang = 0.5 * (rot.trace() - 1);
+    T theta = std::acos(cos_ang);
+
+    aa4(0) = theta;
+    if (std::fabs(theta) < Math::eps) {
+        aa4.tail(3) = Eigen::Vector3<T>(0, 0, 0);
+        return;
+    }
+
+    aa4(1) = rot(2, 1) - rot(1, 2);
+    aa4(2) = rot(0, 2) - rot(2, 0);
+    aa4(3) = rot(1, 0) - rot(0, 1);
+    aa4.tail(3) *= theta / std::sin(theta);
+}
+
+template<class T>
+Eigen::Vector4<T> rot_to_aa4(const Eigen::Ref<const Eigen::Matrix3<T>> &rot) {
+    Eigen::Vector4<T> aa4;
+    rot_to_aa4<T>(rot, aa4);
+    return aa4;
+}
+
 template<class T>
 void rot_to_eulerZYX(const Eigen::Ref<const Eigen::Matrix3<T>> &rot, Eigen::Ref<Eigen::Vector3<T>> eulerZYX) {
     static_assert(std::is_floating_point<T>::value, "Type must be floating point");

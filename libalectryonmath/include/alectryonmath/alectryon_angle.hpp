@@ -60,7 +60,7 @@ T angle_dist(T angle1, T angle2);
  * @brief Interpolates between two angles
  * @details angles are treated as if equal to their equivalence class (eg. angles in the range [0, 2 pi))
  * We obtain the smallest (in terms of magnitude) signed distance between angle1 and angle2
- * The interpolation then returns angle1 + (dist * alpha).
+ * The interpolation then returns angle1 + alpha * (angle2 - angle1).
  *
  * @tparam T
  * @param angle1

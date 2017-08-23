@@ -22,6 +22,9 @@ include_directories(
 add_executable(RotationConversionsTests tests/RotationConversionsUnitTests.cpp)
 target_link_libraries(RotationConversionsTests ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
+add_executable(RotationConversionsIntensiveTest tests/RotationConversionsIntensiveTest.cpp)
+target_link_libraries(RotationConversionsIntensiveTest ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
 add_executable(AngleUnitTests tests/AngleUnitTests.cpp tests/TestHelpers.h)
 target_link_libraries(AngleUnitTests ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
